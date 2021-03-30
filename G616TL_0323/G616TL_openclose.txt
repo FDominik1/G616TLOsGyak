@@ -1,0 +1,39 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#define FILE "G616TL.txt"
+
+/* Rendszerhivások prototipusa
+size_t write (int, void*, size_t);
+size_t read (int, void*, size_t);
+off_t lseek(int, off_t, int);
+int open(const char *, int, mode_t);
+int close(int);
+*/
+
+int main()
+{
+    int fileH = open(FILE, O_RDWR);
+    if(fileH == -1)
+    {
+        printf("Couldn't open the \"%s\" file!\n", FILE);
+        return 1;
+    } else printf("Successfully opened \"%s\" File!\n", FILE);
+
+    char content[64];
+    int readed = read(fileH, content, sizeof(content));
+
+    content[readed] = '\0';
+
+    lseek(fileH, 0, SEEK_SET);
+
+    char text[] = "Writing in file";
+    int wrote = write(fileH, text, sizeof(text));
+    close(fileH);
+    return 0;
+}
